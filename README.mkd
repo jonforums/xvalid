@@ -2,8 +2,8 @@
 
 I needed a fast, memory efficient, simple-to-use, and simple-to-deploy command
 line tool for validating XMLs with external DTDs or XSD schemas. This is the
-result. A build recipe (and download) for a single file executable with no
-dependencies.
+result. A build recipe (and download) that creates a single file executable
+having no other dependencies than a C runtime library.
 
 ## License
 
