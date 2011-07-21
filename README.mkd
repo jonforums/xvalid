@@ -1,14 +1,14 @@
 ## What? 
 
 I needed a fast, memory efficient, simple-to-use, and simple-to-deploy command
-line tool for validating XMLs with external DTDs or XSD schemas. This is the
-result. A build recipe (and downloads) that creates a single file executable
-having no other dependencies than a C runtime library. No extra libraries, .NET
-runtimes, or Java runtimes to install or manage.
+line tool for validating very large XML files with external DTDs or XSD schemas.
+This is the result. A build recipe (and downloads) that creates a single file
+executable having no other dependencies than a C runtime library. No need to
+fiddle with extra libraries, or .NET, or Java runtimes.
 
-XValid consists of three basic pieces: a build recipe source repository, a
-`libxml2` development artifacts download, and a download containing the single
-file `xval[.exe]` executable.
+XValid consists of three pieces: a build recipe source repository, a `libxml2`
+development dependencies download, and a download containing the single file
+`xval.exe` executable.
 
 ## Usage Overview - build recipe
 
