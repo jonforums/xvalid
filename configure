@@ -38,6 +38,8 @@ EOT
 compiler toolkit options:
 EOT
       opt :cc, 'C compiler', :short => :none, :default => 'gcc'
+      opt :optflags, 'optimization settings', :short => :o, :default => '-O3'
+      opt :debugflags, 'debug settings', :short => :d, :default => ''
 
       banner <<-EOT
 
@@ -73,6 +75,9 @@ EOT
 
   def make_config
     BUILD_CONFIG[:cc] = @cc
+    BUILD_CONFIG[:optflags] = @opts[:optflags]
+    BUILD_CONFIG[:debugflags] = @opts[:debugflags]
+
     BUILD_CONFIG[:include_dirs] = @include_dirs.to_a
     BUILD_CONFIG[:library_dirs] = @library_dirs.to_a
   end

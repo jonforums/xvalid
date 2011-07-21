@@ -31,10 +31,10 @@ file 'xval.exe' => ['src/xvalid.c'] do |t|
   lib_dirs = config[:library_dirs].map { |i| "-L#{i}" }.join(' ')
 
   cmd = %[sh -c "#{config[:cc]} ]
-  cmd << %[-Wall -O3 ]
+  cmd << %[-Wall #{config[:optflags]} #{config[:debugflags]} ]
   cmd << %[#{inc_dirs} #{lib_dirs} ]
-  cmd << %[-s -o #{t.name} #{t.prerequisites.join}" ]
-  cmd << %[-Wl,-static -lxml2 -Wl,-dy -lws2_32]
+  cmd << %[-s -o #{t.name} #{t.prerequisites.join} ]
+  cmd << %[-Wl,-static -lxml2 -Wl,-dy -lws2_32"]
   sh cmd
 end
 
