@@ -2,8 +2,23 @@
 
 I needed a fast, memory efficient, simple-to-use, and simple-to-deploy command
 line tool for validating XMLs with external DTDs or XSD schemas. This is the
-result. A build recipe (and download) that creates a single file executable
-having no other dependencies than a C runtime library.
+result. A build recipe (and downloads) that creates a single file executable
+having no other dependencies than a C runtime library. No extra libraries, .NET
+runtimes, or Java runtimes to install or manage.
+
+XValid consists of three basic pieces: a build recipe source repository, a
+`libxml2` development artifacts download, and a download containing the single
+file `xval[.exe]` executable.
+
+## Usage Overview - build recipe
+
+1. Install the [DevKit](http://rubyinstaller.org/add-ons/devkit/) and add it to
+your `PATH` environment variable by running it's `devkitvars.bat` file.
+2. Run `ruby configure` to prepare for building. You may have to customize the
+configuration by providing options.
+3. Run `rake`.
+
+## Usage Overview - xval executable
 
 ## License
 
