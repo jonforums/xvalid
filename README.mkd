@@ -30,7 +30,7 @@ file `xval[.exe]` executable.
     compiler toolkit options:
                          --cc <s>:   C compiler (default: gcc)
                --optflags, -o <s>:   optimization settings (default: -O3)
-             --debugflags, -d <s>:   debug settings (default: -ggdb)
+             --debugflags, -d <s>:   debug settings
     
     general options:
                        --help, -h:   Show this message

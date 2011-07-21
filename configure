@@ -39,7 +39,7 @@ compiler toolkit options:
 EOT
       opt :cc, 'C compiler', :short => :none, :default => 'gcc'
       opt :optflags, 'optimization settings', :short => :o, :default => '-O3'
-      opt :debugflags, 'debug settings', :short => :d, :default => ''
+      opt :debugflags, 'debug settings', :type => :string, :short => :d
 
       banner <<-EOT
 
