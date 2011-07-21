@@ -1,0 +1,100 @@
+#!/usr/bin/env ruby
+
+require 'set'
+
+begin
+  require 'psych'
+rescue LoadError
+ensure
+  require 'yaml'
+end
+
+root = File.expand_path File.dirname(__FILE__)
+
+# pull in helper libs
+Dir.glob(File.join(root, 'lib', '*.rb')).each do |f|
+  require f
+end
+
+
+class Configure
+
+  BUILD_CONFIG = {}
+
+  def initialize(root)
+    @config = File.join(root, 'config.yml')
+
+    @opts = Trollop.options do
+      banner <<-EOT
+usage: ruby configure [options]
+
+libxml2 options:
+EOT
+      opt :with_xml2_include, 'libxml2 header directory', :type => :string, :short => :I
+      opt :with_xml2_lib, 'libxml2 library directory', :type => :string, :short => :L
+
+      banner <<-EOT
+
+compiler toolkit options:
+EOT
+      opt :cc, 'C compiler', :short => :none, :default => 'gcc'
+
+      banner <<-EOT
+
+general options:
+EOT
+    end
+
+    # TODO add /usr/local/lib and /usr/local/include?
+    @include_dirs = Set['C:/devlibs/libxml2/include/libxml2']
+    @library_dirs = Set['C:/devlibs/libxml2/lib']
+  end
+
+  def process_env
+    @cc = ENV['CC'] || 'gcc'
+
+    cpath = normalize_path ENV['CPATH'] if ENV['CPATH']
+    @include_dirs.merge cpath if cpath
+
+    lib_path = normalize_path ENV['LIBRARY_PATH'] if ENV['LIBRARY_PATH']
+    @library_dirs.merge lib_path if lib_path
+  end
+
+  def process_args
+    @cc = @opts[:cc] if @opts[:cc_given]
+
+    # TODO confirm this behaves as expected
+    cpath = normalize_path @opts[:with_xml2_include] if @opts[:with_xml2_include_given]
+    @include_dirs.merge cpath if cpath
+
+    lib_path = normalize_path @opts[:with_xml2_lib] if @opts[:with_xml2_lib_given]
+    @library_dirs.merge lib_path if lib_path
+  end
+
+  def make_config
+    BUILD_CONFIG[:cc] = @cc
+    BUILD_CONFIG[:include_dirs] = @include_dirs.to_a
+    BUILD_CONFIG[:library_dirs] = @library_dirs.to_a
+  end
+
+  def write_config
+    File.open(@config, 'wb') do |f|
+      f.puts BUILD_CONFIG.to_yaml
+    end
+  end
+
+  def call
+    process_env
+    process_args
+    make_config
+    write_config
+  end
+
+private
+  def normalize_path(path)
+    path.gsub('\\', File::SEPARATOR).split(/;/)
+  end
+
+end
+
+Configure.new(root).call
