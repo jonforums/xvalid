@@ -18,6 +18,21 @@ file `xval[.exe]` executable.
    configuration by providing options.
 3. Run `rake`.
 
+### configure usage
+
+    C:\projects\xvalid-git>ruby configure --help
+    usage: ruby configure [options]
+    
+    libxml2 options:
+      --with-xml2-include, -I <s>:   libxml2 header directory
+          --with-xml2-lib, -L <s>:   libxml2 library directory
+    
+    compiler toolkit options:
+                         --cc <s>:   C compiler (default: gcc)
+    
+    general options:
+                       --help, -h:   Show this message
+
 ## Usage Overview - xval executable
 
 ## License
