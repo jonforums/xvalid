@@ -1,4 +1,11 @@
+unless File.exists?('config.yaml') && File.exists?('config.h')
+  STDERR.puts "Please run 'ruby configure' first"
+  abort
+end
+
 require 'rake/clean'
+
+root = File.expand_path File.dirname(__FILE__)
 
 begin
   require 'psych'
@@ -7,14 +14,7 @@ ensure
   require 'yaml'
 end
 
-root = File.expand_path File.dirname(__FILE__)
-
 config = YAML.load_file File.join(root, 'config.yaml')
-
-unless File.exists?('config.yaml') && File.exists?('config.h')
-  STDERR.puts "Please run 'ruby configure' first"
-  abort
-end
 
 # load rake helper tasks
 Dir.glob("#{root}/rakelib/**/*.rake").sort.each do |lib|
@@ -22,7 +22,7 @@ Dir.glob("#{root}/rakelib/**/*.rake").sort.each do |lib|
   load lib
 end
 
-# FIXME why aren't all these files being deleted?
+# FIXME why isn't config.yaml being deleted?
 CLOBBER.include('config.h', 'config.yaml', 'xval.exe')
 
 # TODO refactor with configure until hardcode clean
