@@ -22,7 +22,14 @@ class Configure
   BUILD_CONFIG = {}
 
   def initialize(root)
-    @config = File.join(root, 'config.yml')
+    @config = File.join(root, 'config.yaml')
+    @config_h = File.join(root, 'config.h')
+
+    @defines = ['HAVE_CONFIG_H']
+
+    # TODO add /usr/local/lib and /usr/local/include?
+    @include_dirs = Set['C:/devlibs/libxml2/include/libxml2']
+    @library_dirs = Set['C:/devlibs/libxml2/lib']
 
     @opts = Trollop.options do
       banner <<-EOT
@@ -47,9 +54,6 @@ general options:
 EOT
     end
 
-    # TODO add /usr/local/lib and /usr/local/include?
-    @include_dirs = Set['C:/devlibs/libxml2/include/libxml2']
-    @library_dirs = Set['C:/devlibs/libxml2/lib']
   end
 
   def process_env
@@ -75,6 +79,7 @@ EOT
 
   def make_config
     BUILD_CONFIG[:cc] = @cc
+    BUILD_CONFIG[:defines] = @defines unless @defines.empty?
     BUILD_CONFIG[:optflags] = @opts[:optflags]
     BUILD_CONFIG[:debugflags] = @opts[:debugflags]
 
@@ -85,6 +90,17 @@ EOT
   def write_config
     File.open(@config, 'wb') do |f|
       f.puts BUILD_CONFIG.to_yaml
+    end
+
+    File.open(@config_h, 'wb') do |f|
+      f.puts <<-EOT
+/* config.h.  Generated from configure.  */
+
+#define XVALID_VERSION_MAJOR
+#define XVALID_VERSION_MINOR
+#define XVALID_VERSION_PATCH
+#define XVALID_VERSION_STRING
+EOT
     end
   end
 
