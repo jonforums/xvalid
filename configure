@@ -19,7 +19,7 @@ end
 
 class Configure
 
-  BUILD_CONFIG = {}
+  BUILD_CONFIG = { :VERSION => '0.1.0' }
 
   def initialize(root)
     @config = File.join(root, 'config.yaml')
@@ -93,13 +93,15 @@ EOT
     end
 
     File.open(@config_h, 'wb') do |f|
+      version_triple = BUILD_CONFIG[:VERSION].split(/\./)
+
       f.puts <<-EOT
 /* config.h.  Generated from configure.  */
 
-#define XVALID_VERSION_MAJOR
-#define XVALID_VERSION_MINOR
-#define XVALID_VERSION_PATCH
-#define XVALID_VERSION_STRING
+#define XVALID_VERSION_MAJOR   #{version_triple[0]}
+#define XVALID_VERSION_MINOR   #{version_triple[1]}
+#define XVALID_VERSION_PATCH   #{version_triple[2]}
+#define XVALID_VERSION_STRING  "#{BUILD_CONFIG[:VERSION]}"
 EOT
     end
   end
