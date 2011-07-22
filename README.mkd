@@ -45,8 +45,15 @@ development dependencies download, and a download containing the single file
       --dtd DTD_FILE  validate against external DTD file
       --xsd XSD_FILE  validate against external XSD schema file
 
+## Considerations
+
+* Only UTF-8, UTF-16, ISO-8859-1, and ASCII character encodings supported. No iconv library support.
+
+## TODO
+
+* cleanup debug build and `--debugflags` implementation
+* add `upx` executable compression support to the build recipe
+
 ## License
 
 3-clause BSD. See project LICENSE file.
-
-## TODO
