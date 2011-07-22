@@ -1,4 +1,4 @@
-**Q:** How did you configure your libxml2 development download?
+**Q:** How did you configure your libxml2 development download?  
 **A:** Using an MSYS/MinGW/Autotools build toolchain, the magic `configure` incantation was
 
     ./configure --prefix=$PWD/build --without-zlib --without-iconv \
