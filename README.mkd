@@ -29,8 +29,9 @@ development dependencies download, and a download containing the single file
     
     compiler toolkit options:
                          --cc <s>:   C compiler (default: gcc)
+               --defines, -d <s+>:   preprocessor definitions
                --optflags, -o <s>:   optimization settings (default: -O3)
-             --debugflags, -d <s>:   debug settings
+             --debugflags, -g <s>:   debug settings (default: -ggdb)
     
     general options:
                        --help, -h:   Show this message

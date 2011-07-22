@@ -45,8 +45,9 @@ EOT
 compiler toolkit options:
 EOT
       opt :cc, 'C compiler', :short => :none, :default => 'gcc'
+      opt :defines, 'preprocessor definitions', :type => :strings, :short => :d
       opt :optflags, 'optimization settings', :short => :o, :default => '-O3'
-      opt :debugflags, 'debug settings',  :short => :d, :default => '-ggdb'
+      opt :debugflags, 'debug settings',  :short => :g, :default => '-ggdb'
 
       banner <<-EOT
 
@@ -68,6 +69,8 @@ EOT
 
   def process_args
     @cc = @opts[:cc] if @opts[:cc_given]
+
+    @defines.concat @opts[:defines] if @opts[:defines_given]
 
     # TODO confirm this behaves as expected
     cpath = normalize_path @opts[:with_xml2_include] if @opts[:with_xml2_include_given]
