@@ -46,8 +46,8 @@ compiler toolkit options:
 EOT
       opt :cc, 'C compiler', :short => :none, :default => 'gcc'
       opt :defines, 'preprocessor definitions', :type => :strings, :short => :d
-      opt :optflags, 'optimization settings', :short => :o, :default => '-O3'
-      opt :debugflags, 'debug settings',  :short => :g, :default => '-ggdb'
+      opt :optflags, 'optimization settings', :type => :strings, :short => :o, :default => ['O3']
+      opt :debugflags, 'debug settings', :type => :strings, :short => :g
 
       banner <<-EOT
 
@@ -83,8 +83,9 @@ EOT
   def make_config
     BUILD_CONFIG[:cc] = @cc
     BUILD_CONFIG[:defines] = @defines unless @defines.empty?
-    BUILD_CONFIG[:optflags] = @opts[:optflags]
-    BUILD_CONFIG[:debugflags] = @opts[:debugflags]
+    BUILD_CONFIG[:optflags] = @opts[:optflags] unless @opts[:optflags].empty?
+    BUILD_CONFIG[:debugflags] = @opts[:debugflags] if @opts[:debugflags]
+    BUILD_CONFIG[:strip_all] = '-s' unless @opts[:debugflags]
 
     BUILD_CONFIG[:include_dirs] = @include_dirs.to_a
     BUILD_CONFIG[:library_dirs] = @library_dirs.to_a

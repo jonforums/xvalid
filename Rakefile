@@ -29,13 +29,15 @@ CLOBBER.include('config.h', 'config.yaml', 'xval.exe')
 file 'xval.exe' => ['src/xvalid.c'] do |t|
   inc_dirs = config[:include_dirs].map { |i| "-I#{i}" }.join(' ')
   lib_dirs = config[:library_dirs].map { |i| "-L#{i}" }.join(' ')
-  defines = config[:defines].map { |i| "-D#{i}" }.join(' ')
+  defines = config[:defines].map { |i| "-D#{i}" }.join(' ') if config[:defines]
+  optflags = config[:optflags].map { |i| "-#{i}" }.join(' ') if config[:optflags]
+  debugflags = config[:debugflags].map { |i| "-#{i}" }.join(' ') if config[:debugflags]
 
   cmd = %[cmd.exe /c "#{config[:cc]} ]
   cmd << %[#{defines} ]
-  cmd << %[-Wall #{config[:optflags]} #{config[:debugflags]} ]
+  cmd << %[-Wall #{optflags} #{debugflags} ]
   cmd << %[-I. #{inc_dirs} #{lib_dirs} ]
-  cmd << %[-s -o #{t.name} #{t.prerequisites.join} ]
+  cmd << %[#{config[:strip_all]} -o #{t.name} #{t.prerequisites.join} ]
   cmd << %[-Wl,-static -lxml2 -Wl,-dy -lws2_32"]
   sh cmd
 end
