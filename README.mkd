@@ -38,6 +38,13 @@ development dependencies download, and a download containing the single file
 
 ## Usage Overview - xval executable
 
+    C:\projects\xvalid-git>xval.exe
+    XVal: Validate XML documents
+    Usage: xval [--dtd DTD_FILE | --xsd XSD_FILE] XML_FILE ...
+    
+      --dtd DTD_FILE  validate against external DTD file
+      --xsd XSD_FILE  validate against external XSD schema file
+
 ## License
 
 3-clause BSD. See project LICENSE file.
