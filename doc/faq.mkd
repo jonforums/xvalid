@@ -1,0 +1,6 @@
+**Q:** How did you configure your libxml2 development download?
+**A:** Using an MSYS/MinGW/Autotools build toolchain, the magic `configure` incantation was
+
+    ./configure --prefix=$PWD/build --without-zlib --without-iconv \
+                --without-schematron --without-docbook --disable-ipv6 \
+                --disable-rebuild-docs
