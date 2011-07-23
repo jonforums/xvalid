@@ -39,11 +39,15 @@ development dependencies download, and a download containing the single file
 ## Usage Overview - xval executable
 
     C:\projects\xvalid-git>xval.exe
-    XVal: Validate XML documents
-    Usage: xval [--dtd DTD_FILE | --xsd XSD_FILE] XML_FILE ...
+    XValid vX.Y.Z - validate XML documents
+    Usage: xval [options] XML_FILE ...
     
-      --dtd DTD_FILE  validate against external DTD file
-      --xsd XSD_FILE  validate against external XSD schema file
+    where validation are:
+      --dtd FILE      validate against external DTD file
+      --xsd FILE      validate against external XSD schema file
+    
+    where general options are:
+      --handler FILE  use external error handler (.so|.dll|.lua)
 
 ## Considerations
 
@@ -52,6 +56,8 @@ development dependencies download, and a download containing the single file
 ## TODO
 
 * add `upx` executable compression support to the build recipe
+* integrate Lua (5.2?) interpreter
+* add runtime/CLI selectable support for `.so`, `.dll`, `.lua` error handlers
 
 ## License
 
