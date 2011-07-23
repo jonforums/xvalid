@@ -4,19 +4,31 @@ I needed a fast, memory efficient, simple-to-use, and simple-to-deploy command
 line tool for validating very large XML files with external DTDs or XSD schemas.
 This is the result. A build recipe (and downloads) that creates a single file
 executable having no other dependencies than a C runtime library. No need to
-fiddle with extra libraries, or .NET, or Java runtimes.
+fiddle with extra libraries, .NET, Java, Ruby, Python or any other runtimes.
 
-XValid consists of three pieces: a build recipe source repository, a `libxml2`
-development dependencies download, and a download containing the single file
-`xval.exe` executable.
+The XValid project consists of the following pieces:
+
+* a build recipe source repository
+* a `libxml2` development dependencies download for Windows users, and
+* a download containing the single file `xval` executable for both Windows and Linux users
 
 ## Usage Overview - build recipe
 
-1. Install the [DevKit](http://rubyinstaller.org/add-ons/devkit/) and add it to
+### building on Windows
+
+1. If not already available, install Ruby using the [RubyInstaller](http://rubyinstaller.org/downloads).
+2. Install the [DevKit](http://rubyinstaller.org/add-ons/devkit/) and add it to
    your `PATH` environment variable by running it's `devkitvars.bat` file.
-2. Run `ruby configure` to prepare for building. You may have to customize the
-   configuration by providing options.
-3. Run `rake`.
+3. Download and install the provided `libxml2` library.
+4. Run `ruby configure` to configure for building, providing options as needed.
+5. Run `rake`.
+
+### building on Linux
+
+1. If not already available, install Ruby and ensure it's on your `PATH`.
+2. Install the `libxml2` headers and libraries relevant to your distribution.
+3. Run `./configure` to prepare for building, providing options as needed.
+4. Run `rake`.
 
 ### configure usage
 
@@ -39,6 +51,12 @@ development dependencies download, and a download containing the single file
 
 ## Usage Overview - xval executable
 
+Once you've downloaded either the pre-built executable or built your own version,
+simply run it via `xval.exe` (Windows) or `./xval` (Linux). That's it!
+
+You can always get command line help information by running the executable with
+no arguments like the following.
+
     C:\projects\xvalid-git>xval.exe
     XValid vX.Y.Z - validate XML documents
     Usage: xval [options] XML_FILE ...
@@ -53,12 +71,14 @@ development dependencies download, and a download containing the single file
 ## Considerations
 
 * Only UTF-8, UTF-16, ISO-8859-1, and ASCII character encodings supported. No iconv library support.
+* Validation against either an external DTD or XSD, not both simultaneously.
 
 ## TODO
 
 * add `upx` executable compression support to the build recipe
 * integrate Lua (5.2?) interpreter
 * add runtime/CLI selectable support for `.so`, `.dll`, `.lua` error handlers
+* add support for building `libxml2` from source (leverage MiniPortile?)
 
 ## License
 
