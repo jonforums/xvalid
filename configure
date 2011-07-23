@@ -19,7 +19,7 @@ end
 
 class Configure
 
-  BUILD_CONFIG = { :VERSION => '0.1.0' }
+  BUILD_CONFIG = { :VERSION => '0.1.0', :APPNAME => 'xval' }
 
   def initialize(root)
     @config = File.join(root, 'config.yaml')
@@ -58,6 +58,8 @@ EOT
   end
 
   def process_env
+    BUILD_CONFIG[:APPNAME] << '.exe' unless nix?
+
     @cc = ENV['CC'] || 'gcc'
 
     cpath = normalize_path ENV['CPATH'] if ENV['CPATH']
@@ -120,6 +122,10 @@ EOT
 private
   def normalize_path(path)
     path.gsub('\\', File::SEPARATOR).split(/;/)
+  end
+
+  def nix?
+    %w{man top}.all? { |t| system "#{t} --version" }
   end
 
 end

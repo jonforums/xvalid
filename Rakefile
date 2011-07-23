@@ -14,6 +14,7 @@ ensure
   require 'yaml'
 end
 
+# TODO abort if malformed YAML
 config = YAML.load_file File.join(root, 'config.yaml')
 
 # load rake helper tasks
@@ -23,10 +24,10 @@ Dir.glob("#{root}/rakelib/**/*.rake").sort.each do |lib|
 end
 
 # FIXME why isn't config.yaml being deleted?
-CLOBBER.include('config.h', 'config.yaml', 'xval.exe')
+CLOBBER.include('config.h', 'config.yaml', config[:APPNAME])
 
 # TODO refactor with configure until hardcode clean
-file 'xval.exe' => ['src/xvalid.c'] do |t|
+file config[:APPNAME] => ['src/xvalid.c'] do |t|
   inc_dirs = config[:include_dirs].map { |i| "-I#{i}" }.join(' ')
   lib_dirs = config[:library_dirs].map { |i| "-L#{i}" }.join(' ')
   defines = config[:defines].map { |i| "-D#{i}" }.join(' ') if config[:defines]
