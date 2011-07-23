@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'set'
+require 'rbconfig'
 
 begin
   require 'psych'
@@ -59,7 +60,7 @@ EOT
   end
 
   def process_env
-    BUILD_CONFIG[:APPNAME] << '.exe' unless nix?
+    BUILD_CONFIG[:APPNAME] << '.exe' if windows?
 
     @cc = ENV['CC'] || 'gcc'
 
@@ -84,6 +85,7 @@ EOT
   end
 
   def make_config
+    BUILD_CONFIG[:shell] = windows? ? 'cmd.exe /c' : 'sh -c'
     BUILD_CONFIG[:cc] = @cc
     BUILD_CONFIG[:defines] = @defines unless @defines.empty?
     BUILD_CONFIG[:optflags] = @opts[:optflags] unless @opts[:optflags].empty?
@@ -127,8 +129,8 @@ private
     path.gsub('\\', File::SEPARATOR).split(/;/)
   end
 
-  def nix?
-    %w{man top}.all? { |t| system "#{t} --version" }
+  def windows?
+    @windows ||= RbConfig::CONFIG['host_os'] =~ /(mingw|mswin)/
   end
 
 end

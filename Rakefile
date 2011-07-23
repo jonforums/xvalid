@@ -34,16 +34,17 @@ file config[:APPNAME] => ['src/xvalid.c'] do |t|
   optflags = config[:optflags].map { |i| "-#{i}" }.join(' ') if config[:optflags]
   debugflags = config[:debugflags].map { |i| "-#{i}" }.join(' ') if config[:debugflags]
 
-  cmd = %[cmd.exe /c "#{config[:cc]} ]
+  cmd = %[#{config[:shell]} "#{config[:cc]} ]
   cmd << %[#{defines} ]
   cmd << %[-Wall #{optflags} #{debugflags} ]
   cmd << %[-I. #{inc_dirs} #{lib_dirs} ]
   cmd << %[#{config[:strip_all]} -o #{t.name} #{t.prerequisites.join} ]
+  # TODO move linker info to configure to customize for win vs. nix
   cmd << %[-Wl,-static -lxml2 -Wl,-dy -lws2_32"]
   sh cmd
 end
 
 desc 'Build xval.exe'
-task :build => ['xval.exe']
+task :build => [ config[:APPNAME] ]
 
 task :default => [:build]
