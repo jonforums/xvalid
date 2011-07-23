@@ -53,6 +53,7 @@ EOT
 
 general options:
 EOT
+      opt :debug_build, 'build app with debugging messages', :short => :none
     end
 
   end
@@ -109,6 +110,8 @@ EOT
 #define XVALID_VERSION_PATCH   #{version_triple[2]}
 #define XVALID_VERSION_STRING  "#{BUILD_CONFIG[:VERSION]}"
 EOT
+
+      f.puts '#define XVALID_DEBUG_BUILD     1' if @opts[:debug_build]
     end
   end
 

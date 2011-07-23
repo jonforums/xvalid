@@ -34,6 +34,7 @@ development dependencies download, and a download containing the single file
             --debugflags, -g <s+>:   debug settings
     
     general options:
+                    --debug-build:   build app with debugging messages
                        --help, -h:   Show this message
 
 ## Usage Overview - xval executable
