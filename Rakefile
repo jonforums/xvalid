@@ -14,8 +14,11 @@ ensure
   require 'yaml'
 end
 
-# TODO abort if malformed YAML
-config = YAML.load_file File.join(root, 'config.yaml')
+begin
+  config = YAML.load_file File.join(root, 'config.yaml')
+rescue ::Exception
+  abort 'Unable to parse config.yaml, exiting...'
+end
 
 # load rake helper tasks
 Dir.glob("#{root}/rakelib/**/*.rake").sort.each do |lib|
@@ -23,27 +26,47 @@ Dir.glob("#{root}/rakelib/**/*.rake").sort.each do |lib|
   load lib
 end
 
+def ext(fn, newext)
+  fn.sub(/\.[^.]+$/, newext)
+end
+
+SRCFILES = Rake::FileList['src/*.c']
+OBJFILES = SRCFILES.map { |f| File.basename ext(f, '.o') }
+
 # FIXME why isn't config.yaml being deleted?
-CLOBBER.include('config.h', 'config.yaml', config[:APPNAME])
+CLOBBER.include('config.h', 'config.yaml', config[:APPNAME]).concat(OBJFILES)
 
-# TODO refactor with configure until hardcode clean
-file config[:APPNAME] => ['src/xvalid.c'] do |t|
-  inc_dirs = config[:include_dirs].map { |i| "-I#{i}" }.join(' ')
-  lib_dirs = config[:library_dirs].map { |i| "-L#{i}" }.join(' ')
-  defines = config[:defines].map { |i| "-D#{i}" }.join(' ') if config[:defines]
-  optflags = config[:optflags].map { |i| "-#{i}" }.join(' ') if config[:optflags]
-  debugflags = config[:debugflags].map { |i| "-#{i}" }.join(' ') if config[:debugflags]
+OBJFILES.each do |obj|
+  src = File.join('src', ext(obj, '.c'))
+  file obj => src do |t|
+    cmd = %[#{config[:shell]} "#{config[:cc]} ]
+    cmd << %[#{$opts[:defines]} ]
+    cmd << %[-Wall #{$opts[:optflags]} #{$opts[:debugflags]} ]
+    cmd << %[-I. #{$opts[:inc_dirs]} -c -o #{t.name} #{t.prerequisites.join}"]
+    sh cmd
+  end
+end
 
+task :settings => ['config.yaml'] do |t|
+  $opts = {
+    :inc_dirs => config[:include_dirs].map { |i| "-I#{i}" }.join(' '),
+    :lib_dirs => config[:library_dirs].map { |i| "-L#{i}" }.join(' '),
+  }
+  $opts[:defines] = config[:defines].map { |i| "-D#{i}" }.join(' ') if config[:defines]
+  $opts[:optflags] = config[:optflags].map { |i| "-#{i}" }.join(' ') if config[:optflags]
+  $opts[:debugflags] = config[:debugflags].map { |i| "-#{i}" }.join(' ') if config[:debugflags]
+end
+
+file config[:APPNAME] => OBJFILES do |t|
   cmd = %[#{config[:shell]} "#{config[:cc]} ]
-  cmd << %[#{defines} ]
-  cmd << %[-Wall #{optflags} #{debugflags} ]
-  cmd << %[-I. #{inc_dirs} #{lib_dirs} ]
-  cmd << %[#{config[:strip_all]} -o #{t.name} #{t.prerequisites.join} ]
+  cmd << %[-Wall #{$opts[:optflags]} #{$opts[:debugflags]} ]
+  cmd << %[#{$opts[:lib_dirs]} ]
+  cmd << %[#{config[:strip_all]} -o #{t.name} #{t.prerequisites.join(' ')} ]
   cmd << %[#{config[:libs]}"]
   sh cmd
 end
 
-desc 'Build xval.exe'
-task :build => [ config[:APPNAME] ]
+desc "Build #{config[:APPNAME]} v#{config[:VERSION]}"
+task :build => [:settings, config[:APPNAME]]
 
 task :default => [:build]
