@@ -64,10 +64,10 @@ EOT
     @cc = ENV['CC'] || 'gcc'
 
     cpath = normalize_path ENV['CPATH'] if ENV['CPATH']
-    @include_dirs = cpath || @include_dirs
+    @include_dirs.unshift(cpath).flatten! if cpath
 
     lib_path = normalize_path ENV['LIBRARY_PATH'] if ENV['LIBRARY_PATH']
-    @library_dirs = lib_path || @library_dirs
+    @library_dirs.unshift(lib_path).flatten! if lib_path
   end
 
   def process_args
@@ -76,10 +76,10 @@ EOT
     @defines.concat @opts[:defines] if @opts[:defines_given]
 
     cpath = normalize_path @opts[:with_xml2_include] if @opts[:with_xml2_include_given]
-    @include_dirs = cpath || @include_dirs
+    @include_dirs.unshift(cpath).flatten! if cpath
 
     lib_path = normalize_path @opts[:with_xml2_lib] if @opts[:with_xml2_lib_given]
-    @library_dirs = lib_path || @library_dirs
+    @library_dirs.unshift(lib_path).flatten! if lib_path
   end
 
   def make_config
@@ -90,8 +90,8 @@ EOT
     BUILD_CONFIG[:debugflags] = @opts[:debugflags] if @opts[:debugflags]
     BUILD_CONFIG[:strip_all] = '-s' unless @opts[:debugflags]
 
-    BUILD_CONFIG[:include_dirs] = @include_dirs.to_a
-    BUILD_CONFIG[:library_dirs] = @library_dirs.to_a
+    BUILD_CONFIG[:include_dirs] = @include_dirs
+    BUILD_CONFIG[:library_dirs] = @library_dirs
 
     BUILD_CONFIG[:libs] = windows? ?
                           '-Wl,-static -lxml2 -Wl,-dy -lws2_32' :
