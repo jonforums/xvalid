@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2011 Jon Maken, All Rights Reserved
  * License: 3-Clause BSD
- * Revision: 07/23/2011 3:03:37 PM
+ * Revision: 07/24/2011 9:07:14 AM
  */
 
 #include "xvalid_private.h"
@@ -26,11 +26,7 @@ static char *schema_file = NULL;
 
 static int parser_options = 0;
 
-#if defined (_WIN32) && !defined(__CYGWIN__)
-static struct _stat stat_info;
-#else
 static struct stat stat_info;
-#endif
 
 /**
  * debugging SAX handler callbacks
