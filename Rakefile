@@ -39,8 +39,7 @@ file config[:APPNAME] => ['src/xvalid.c'] do |t|
   cmd << %[-Wall #{optflags} #{debugflags} ]
   cmd << %[-I. #{inc_dirs} #{lib_dirs} ]
   cmd << %[#{config[:strip_all]} -o #{t.name} #{t.prerequisites.join} ]
-  # TODO move linker info to configure to customize for win vs. nix
-  cmd << %[-Wl,-static -lxml2 -Wl,-dy -lws2_32"]
+  cmd << %[#{config[:libs]}"]
   sh cmd
 end
 

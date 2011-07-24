@@ -94,6 +94,10 @@ EOT
 
     BUILD_CONFIG[:include_dirs] = @include_dirs.to_a
     BUILD_CONFIG[:library_dirs] = @library_dirs.to_a
+
+    BUILD_CONFIG[:libs] = windows? ?
+                          '-Wl,-static -lxml2 -Wl,-dy -lws2_32' :
+                          '-Wl,-static -lxml2 -Wl,-dy -lc -lm -lz'
   end
 
   def write_config
