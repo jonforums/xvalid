@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'set'
 require 'rbconfig'
 
 begin
@@ -26,11 +25,11 @@ class Configure
     @config = File.join(root, 'config.yaml')
     @config_h = File.join(root, 'config.h')
 
-    @defines = ['HAVE_CONFIG_H']
+    @defines = [ 'HAVE_CONFIG_H' ]
 
     # TODO add /usr/local/lib and /usr/local/include?
-    @include_dirs = Set['C:/devlibs/libxml2/include/libxml2']
-    @library_dirs = Set['C:/devlibs/libxml2/lib']
+    @include_dirs = [ 'C:/devlibs/libxml2/include/libxml2' ]
+    @library_dirs = [ 'C:/devlibs/libxml2/lib' ]
 
     @opts = Trollop.options do
       banner <<-EOT
@@ -65,10 +64,10 @@ EOT
     @cc = ENV['CC'] || 'gcc'
 
     cpath = normalize_path ENV['CPATH'] if ENV['CPATH']
-    @include_dirs.merge cpath if cpath
+    @include_dirs = cpath || @include_dirs
 
     lib_path = normalize_path ENV['LIBRARY_PATH'] if ENV['LIBRARY_PATH']
-    @library_dirs.merge lib_path if lib_path
+    @library_dirs = lib_path || @library_dirs
   end
 
   def process_args
@@ -76,12 +75,11 @@ EOT
 
     @defines.concat @opts[:defines] if @opts[:defines_given]
 
-    # TODO confirm this behaves as expected
     cpath = normalize_path @opts[:with_xml2_include] if @opts[:with_xml2_include_given]
-    @include_dirs.merge cpath if cpath
+    @include_dirs = cpath || @include_dirs
 
     lib_path = normalize_path @opts[:with_xml2_lib] if @opts[:with_xml2_lib_given]
-    @library_dirs.merge lib_path if lib_path
+    @library_dirs = lib_path || @library_dirs
   end
 
   def make_config
