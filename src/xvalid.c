@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2011 Jon Maken, All Rights Reserved
  * License: 3-Clause BSD
- * Revision: 07/24/2011 5:41:59 PM
+ * Revision: 07/24/2011 8:40:06 PM
  */
 
-#include "xvalid_private.h"
+#include "xvalid.h"
 
 static void usage(void)
 {
