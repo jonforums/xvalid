@@ -19,7 +19,7 @@ end
 
 class Configure
 
-  BUILD_CONFIG = { :VERSION => '0.1.0', :APPNAME => 'xval' }
+  BUILD_CONFIG = { :VERSION => '0.2.0', :APPNAME => 'xval' }
 
   def initialize(root)
     @config = File.join(root, 'config.yaml')
@@ -28,8 +28,14 @@ class Configure
     @defines = [ 'HAVE_CONFIG_H' ]
 
     # TODO add /usr/local/lib and /usr/local/include?
-    @include_dirs = [ 'C:/devlibs/libxml2/include/libxml2' ]
-    @library_dirs = [ 'C:/devlibs/libxml2/lib' ]
+    @include_dirs = [
+      'C:/devlibs/libxml2/include/libxml2',
+      'C:/devlibs/lua52/include'
+    ]
+    @library_dirs = [
+      'C:/devlibs/libxml2/lib',
+      'C:/devlibs/lua52/lib'
+    ]
 
     @opts = Trollop.options do
       banner <<-EOT
@@ -37,8 +43,15 @@ usage: ruby configure [options]
 
 libxml2 options:
 EOT
-      opt :with_xml2_include, 'libxml2 header directory', :type => :string, :short => :I
-      opt :with_xml2_lib, 'libxml2 library directory', :type => :string, :short => :L
+      opt :with_xml2_include, 'libxml2 header directory', :type => :string, :short => :none
+      opt :with_xml2_lib, 'libxml2 library directory', :type => :string, :short => :none
+
+      banner <<-EOT
+
+liblua options:
+EOT
+      opt :with_lua_include, 'liblua header directory', :type => :string, :short => :none
+      opt :with_lua_lib, 'liblua library directory', :type => :string, :short => :none
 
       banner <<-EOT
 
@@ -75,11 +88,18 @@ EOT
 
     @defines.concat @opts[:defines] if @opts[:defines_given]
 
-    cpath = normalize_path @opts[:with_xml2_include] if @opts[:with_xml2_include_given]
-    @include_dirs.unshift(cpath).flatten! if cpath
+    { :with_xml2_include => :with_xml2_include_given,
+      :with_lua_include => :with_lua_include_given }.each do |k,v|
+      cpath = normalize_path @opts[k] if @opts[v]
+      @include_dirs.unshift(cpath).flatten! if cpath
+    end
 
-    lib_path = normalize_path @opts[:with_xml2_lib] if @opts[:with_xml2_lib_given]
-    @library_dirs.unshift(lib_path).flatten! if lib_path
+    { :with_xml2_lib => :with_xml2_lib_given,
+      :with_lua_lib => :with_lua_lib_given }.each do |k,v|
+      lib_path = normalize_path @opts[k] if @opts[v]
+      @library_dirs.unshift(lib_path).flatten! if lib_path
+    end
+
   end
 
   def make_config
@@ -93,8 +113,9 @@ EOT
     BUILD_CONFIG[:include_dirs] = @include_dirs
     BUILD_CONFIG[:library_dirs] = @library_dirs
 
+    # TODO too hardcoded to survive :(
     BUILD_CONFIG[:libs] = windows? ?
-                          '-Wl,-static -lxml2 -Wl,-dy -lws2_32' :
+                          '-Wl,-static -lxml2 -llua52 -Wl,-dy -lws2_32' :
                           '-Wl,-static -lxml2 -Wl,-dy -lc -lm -lz'
   end
 

@@ -33,9 +33,9 @@ end
 SRCFILES = Rake::FileList['src/*.c']
 OBJFILES = SRCFILES.map { |f| File.basename ext(f, '.o') }
 
-CLEAN.concat OBJFILES
 # FIXME why isn't config.yaml being deleted?
-CLOBBER.include('config.h', 'config.yaml', config[:APPNAME]).concat(OBJFILES)
+CLEAN.concat OBJFILES
+CLOBBER.include('config.h', 'config.yaml', config[:APPNAME])
 
 OBJFILES.each do |obj|
   src = File.join('src', ext(obj, '.c'))

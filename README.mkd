@@ -32,22 +32,25 @@ The XValid project consists of the following pieces:
 
 ### configure usage
 
-    C:\projects\xvalid-git>ruby configure --help
     usage: ruby configure [options]
     
     libxml2 options:
-      --with-xml2-include, -I <s>:   libxml2 header directory
-          --with-xml2-lib, -L <s>:   libxml2 library directory
+      --with-xml2-include <s>:   libxml2 header directory
+          --with-xml2-lib <s>:   libxml2 library directory
+    
+    liblua options:
+       --with-lua-include <s>:   liblua header directory
+           --with-lua-lib <s>:   liblua library directory
     
     compiler toolkit options:
-                         --cc <s>:   C compiler (default: gcc)
-               --defines, -d <s+>:   preprocessor definitions
-              --optflags, -o <s+>:   optimization settings (default: O3)
-            --debugflags, -g <s+>:   debug settings
+                     --cc <s>:   C compiler (default: gcc)
+           --defines, -d <s+>:   preprocessor definitions
+          --optflags, -o <s+>:   optimization settings (default: O3)
+        --debugflags, -g <s+>:   debug settings
     
     general options:
-                    --debug-build:   build app with debugging messages
-                       --help, -h:   Show this message
+                --debug-build:   build app with debugging messages
+                   --help, -h:   Show this message
 
 ## Usage Overview - xval executable
 
@@ -76,9 +79,9 @@ no arguments like the following.
 ## TODO
 
 * add `upx` executable compression support to the build recipe
-* integrate Lua (5.2?) interpreter
 * add runtime/CLI selectable support for `.so`, `.dll`, `.lua` error handlers
 * add support for building `libxml2` from source (leverage MiniPortile?)
+* add Lua development dependencies download for Windows users
 
 ## License
 

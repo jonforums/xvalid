@@ -11,6 +11,10 @@
 #include <sys/stat.h>
 #include <errno.h>
 
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
+
 #include <libxml/parser.h>
 
 #ifdef XVALID_DEBUG_BUILD

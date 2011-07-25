@@ -28,6 +28,26 @@ static int parser_options = 0;
 
 static struct stat stat_info;
 
+static lua_State *L = NULL;
+
+
+static lua_State *embed_lua(void)
+{
+	L = luaL_newstate();
+	if (L == NULL) return NULL;
+
+	/* stop the GC during Lua library (all std) initialization and function
+	 * registrations
+	 */
+	lua_gc(L, LUA_GCSTOP, 0);
+	luaL_openlibs(L);
+
+	/* TODO register functions here */
+
+	lua_gc(L, LUA_GCRESTART, 0);
+
+	return(L);
+}
 
 static int validate_xml_file(const char *filename)
 {
@@ -103,6 +123,14 @@ int main(int argc, char **argv)
 		return(1);
 	}
 
+	/* embed Lua interpreter */
+    L = embed_lua();
+	if (L == NULL)
+	{
+		fprintf(stderr, "Cannot initialize Lua; exiting...");
+		return EXIT_FAILURE;
+	}
+
 	for (i = file_start; i < argc; i++)
 	{
 		rv = stat(argv[i], &stat_info);
@@ -127,8 +155,11 @@ int main(int argc, char **argv)
 		validate_xml_file(argv[i]);
 	}
 
+	/* cleanup Lua */
+	lua_close(L);
+
 	/* cleanup function for the XML library; boilerplate */
 	xmlCleanupParser();
 
-	return(0);
+	return EXIT_SUCCESS;
 }
