@@ -27,7 +27,7 @@ The XValid project consists of the following pieces:
 
 1. If not already available, install Ruby and ensure it's on your `PATH`.
 2. Install the `libxml2` headers and libraries relevant to your distribution.
-3. Run `./configure` to prepare for building, providing options as needed.
+3. Run `./configure` (may need to make executable via `chmod +x configure`) to prepare for building, providing options as needed.
 4. Run `rake`.
 
 ### configure usage
