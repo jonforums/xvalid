@@ -52,6 +52,7 @@ liblua options:
 EOT
       opt :with_lua_include, 'liblua header directory', :type => :string, :short => :none
       opt :with_lua_lib, 'liblua library directory', :type => :string, :short => :none
+      opt :lua_libname, 'libname sans prefix', :short => :none, :default => 'lua52'
 
       banner <<-EOT
 
@@ -113,10 +114,9 @@ EOT
     BUILD_CONFIG[:include_dirs] = @include_dirs
     BUILD_CONFIG[:library_dirs] = @library_dirs
 
-    # TODO too hardcoded to survive :(
     BUILD_CONFIG[:libs] = windows? ?
-                          '-Wl,-static -lxml2 -llua52 -Wl,-dy -lws2_32' :
-                          '-Wl,-static -lxml2 -Wl,-dy -lc -lm -lz'
+                          "-Wl,-static -lxml2 -l#{@opts[:lua_libname]} -Wl,-dy -lws2_32" :
+                          "-Wl,-static -lxml2 -l#{@opts[:lua_libname]} -Wl,-dy -lc -lm -lz"
   end
 
   def write_config

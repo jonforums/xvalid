@@ -41,6 +41,7 @@ The XValid project consists of the following pieces:
     liblua options:
        --with-lua-include <s>:   liblua header directory
            --with-lua-lib <s>:   liblua library directory
+            --lua-libname <s>:   libname sans prefix (default: lua52)
     
     compiler toolkit options:
                      --cc <s>:   C compiler (default: gcc)
