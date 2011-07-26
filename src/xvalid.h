@@ -20,6 +20,9 @@
 
 #include <libxml/parser.h>
 
+#define MAX_FILE_COUNT    200
+#define MAX_FILENAME_SIZE 100
+
 #ifdef XVALID_DEBUG_BUILD
 extern void start_document(void *ctx);
 extern void end_document(void *ctx);
