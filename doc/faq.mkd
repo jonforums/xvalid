@@ -4,3 +4,10 @@
     ./configure --prefix=$PWD/build --without-zlib --without-iconv \
                 --without-schematron --without-docbook --disable-ipv6 \
                 --disable-rebuild-docs
+
+**Q:** What's a typical `./configure` call look like on Linux?  
+**A:** Assuming you've installed both the `libxml2` and `liblua` development
+dependencies in the default directories for your build toolkit, building can
+often be as simple as
+
+    ./configure --with-xml2-include=/usr/include/libxml2 --lua-libname=lua
