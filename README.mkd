@@ -83,6 +83,8 @@ no arguments like the following.
 * add runtime/CLI selectable support for `.so`, `.dll`, `.lua` error handlers
 * add support for building `libxml2` and `liblua` from source (leverage MiniPortile?)
 * add Lua development dependencies download for Windows users
+* give `configure` more brains to figure out whether `libxml2` and `liblua` are available
+* add filename length and maximum files checks
 
 ## License
 
