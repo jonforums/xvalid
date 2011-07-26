@@ -11,11 +11,11 @@
 #  define close_lib dlclose
 #else
 #  include <windows.h>
-#  define load_lib xvalid_lib_loader
+#  define load_lib xvalid_load_lib
 #  define symbol_from_lib GetProcAddress
 #  define close_lib FreeLibrary
 #endif /* _WIN32 */
 
-HANDLE xvalid_lib_loader(char *filename);
+HANDLE xvalid_load_lib(char *filename);
 
 #endif /* LOADER_H */

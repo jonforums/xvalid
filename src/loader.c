@@ -1,6 +1,6 @@
 #include "loader.h"
 
-HANDLE xvalid_lib_loader(char *filename)
+HANDLE xvalid_load_lib(char *filename)
 {
 	HANDLE dll = NULL;
 
