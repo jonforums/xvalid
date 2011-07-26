@@ -1,3 +1,6 @@
+#ifndef XVALID_H
+#define XVALID_H
+
 #if HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -70,3 +73,5 @@ static xmlSAXHandler sax_handlers = {
     NULL  /* xmlStructuredErrorFunc */
 };
 static xmlSAXHandlerPtr handlers = &sax_handlers;
+
+#endif /* XVALID_H */
