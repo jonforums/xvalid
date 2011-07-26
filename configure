@@ -116,7 +116,7 @@ EOT
 
     BUILD_CONFIG[:libs] = windows? ?
                           "-Wl,-static -lxml2 -l#{@opts[:lua_libname]} -Wl,-dy -lws2_32" :
-                          "-Wl,-static -lxml2 -l#{@opts[:lua_libname]} -Wl,-dy -lc -lm -lz"
+                          "-Wl,-static -lxml2 -l#{@opts[:lua_libname]} -Wl,-dy,--as-needed -ldl -lc -lm -lz"
   end
 
   def write_config
