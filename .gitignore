@@ -1,3 +1,4 @@
 *.exe
+*.o
 config.h
 config.yaml
