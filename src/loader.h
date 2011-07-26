@@ -1,6 +1,8 @@
 #ifndef LOADER_H
 #define LOADER_H
 
+#include <stdio.h>
+
 #ifndef _WIN32
 #  include <dlfcn.h>
 #  define HANDLE void*
