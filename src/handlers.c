@@ -29,3 +29,8 @@ void fatal_error(void *ctx, const char *msg, ...)
 	vfprintf(stdout, msg, args);
 	va_end(args);
 }
+
+void say(void *ctx, const char *tag, const char *msg)
+{
+	fprintf(stdout, "[%s] %s\n", tag, msg);
+}
