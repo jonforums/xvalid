@@ -6,6 +6,9 @@ This is the result. A build recipe (and downloads) that creates a single file
 executable having no other dependencies than a C runtime library. No need to
 fiddle with extra libraries, .NET, Java, Ruby, Python or any other runtimes.
 
+Limited expandability is supported via runtime native or Lua handler plugins
+that allow customized behavior error, warning, and status messages.
+
 The XValid project consists of the following pieces:
 
 * a build recipe source repository
@@ -79,12 +82,13 @@ no arguments like the following.
 
 ## TODO
 
-* add `upx` executable compression support to the build recipe
-* add runtime/CLI selectable support for `.so`, `.dll`, `.lua` error handlers
-* add support for building `libxml2` and `liblua` from source (leverage MiniPortile?)
-* add Lua development dependencies download for Windows users
+* ensure all relevant state is kept in the xvalid_context struct
 * give `configure` more brains to figure out whether `libxml2` and `liblua` are available
 * add filename length and maximum files checks
+* add runtime/CLI selectable support for `.so`, `.dll`, `.lua` error handlers
+* add Lua development dependencies download for Windows users
+* add support for building `libxml2` and `liblua` from source (leverage MiniPortile?)
+* add `upx` executable compression support to the build recipe
 
 ## License
 
