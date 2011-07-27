@@ -87,6 +87,7 @@ EOT
   def process_args
     @cc = @opts[:cc] if @opts[:cc_given]
 
+    @defines << 'NDEBUG' unless @opts[:debug_build_given]
     @defines.concat @opts[:defines] if @opts[:defines_given]
 
     { :with_xml2_include => :with_xml2_include_given,
@@ -115,7 +116,7 @@ EOT
     BUILD_CONFIG[:library_dirs] = @library_dirs
 
     BUILD_CONFIG[:libs] = windows? ?
-                          "-Wl,-static -lxml2 -l#{@opts[:lua_libname]} -Wl,-dy -lws2_32" :
+                          "-Wl,-static -lxml2 -l#{@opts[:lua_libname]} -Wl,-dy,--as-needed -lws2_32" :
                           "-Wl,-static -lxml2 -l#{@opts[:lua_libname]} -Wl,-dy,--as-needed -ldl -lc -lm -lz"
   end
 
