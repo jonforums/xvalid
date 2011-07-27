@@ -7,7 +7,7 @@ executable having no other dependencies than a C runtime library. No need to
 fiddle with extra libraries, .NET, Java, Ruby, Python or any other runtimes.
 
 Limited expandability is supported via runtime native or Lua handler plugins
-that allow customized behavior error, warning, and status messages.
+that allow customized behavior for error, warning, and status messages.
 
 The XValid project consists of the following pieces:
 
