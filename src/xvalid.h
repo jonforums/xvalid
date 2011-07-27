@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 
@@ -30,9 +31,25 @@ extern void start_element(void *ctx, const xmlChar *name, const xmlChar **atts);
 extern void end_element(void *ctx, const xmlChar *name);
 #endif /* XVALID_DEBUG_BUILD */
 
+/* TODO extract to handlers.h and include? */
 extern void warning(void *ctx, const char *msg, ...);
 extern void error(void *ctx, const char *msg, ...);
 extern void fatal_error(void *ctx, const char *msg, ...);
+extern void say(void *ctx, const char *tag, const char *msg);
+
+/**
+ * Context for maintaining XValid's state during processing
+ */
+typedef struct _xvalid_context {
+	char      *dtd;
+	char      *schema;
+	char      *handler_plugin;
+	char      *current_filename;
+	lua_State *L;
+	int        parser_options;
+	int        errors;
+} xvalid_context;
+typedef xvalid_context *xvalid_ctx_ptr;
 
 static xmlSAXHandler sax_handlers = {
     NULL, /* internalSubset */
