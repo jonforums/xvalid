@@ -1,11 +1,10 @@
 **Q:** How did you configure your `libxml2` development download?  
-**A:** Using an MSYS/MinGW/Autotools build toolchain, the magic `configure` incantation was
+**A:** Using an MSYS/MinGW/Autotools toolchain (TDM GCC 4.5.2), the magic `configure` incantation was
 
     ./configure --prefix=$PWD/build --without-zlib --without-iconv \
-                --without-schematron --without-docbook --disable-ipv6 \
-                --disable-rebuild-docs
+                --without-docbook --disable-ipv6
 
-**Q:** What's a typical `./configure` call look like on Linux?  
+**Q:** What's a typical `./configure` call look like on Arch Linux?  
 **A:** Assuming you've installed both the `libxml2` and `liblua` development
 dependencies in the default directories for your build toolkit, building can
 often be as simple as
