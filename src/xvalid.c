@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2011 Jon Maken, All Rights Reserved
  * License: 3-Clause BSD
- * Revision: 07/27/2011 1:08:59 PM
+ * Revision: 07/29/2011 10:53:10 AM
  */
 
 #include "xvalid.h"
@@ -22,7 +22,7 @@ static void xvalid_usage(void)
 	printf("  --handler FILE  use external error handler (.so|.dll|.lua)\n");
 }
 
-static int xvalid_embed_lua(xvalid_ctx_ptr ctx)
+static int xvalid__embed_lua(xvalid_ctx_ptr ctx)
 {
 	assert(ctx != NULL);
 
@@ -42,34 +42,140 @@ static int xvalid_embed_lua(xvalid_ctx_ptr ctx)
 	return 0;
 }
 
+/* TODO implement */
+static int xvalid__dtd_validate(xvalid_ctx_ptr ctx)
+{
+	int rv = 0;
+	assert(ctx != NULL);
+
+	return 0;
+}
+
+static int xvalid__xsd_validate(xvalid_ctx_ptr ctx)
+{
+	int rv = 0;
+	int ret = 0;
+	xmlSchemaValidCtxtPtr xsd_valid_ctx = NULL;
+	xmlParserInputBufferPtr input = NULL;
+
+	assert(ctx != NULL);
+	assert(ctx->schema != NULL);
+
+	/* TODO memoize XSD validation context */
+	xsd_valid_ctx = xmlSchemaNewValidCtxt(ctx->schema);
+	if (xsd_valid_ctx == NULL)
+	{
+		fprintf(stderr, "[ERROR] unable to create an XSD validation context");
+		rv = 1;
+		goto done;
+	}
+
+	if ((ret = xmlSchemaValidateStream(
+					xsd_valid_ctx,
+					input,
+					0,
+					ctx->handlers,
+					NULL)))
+	{
+		if (ret > 0)
+		{
+			fprintf(stderr, "%s fails XSD validation\n", ctx->current_file);
+		}
+		else
+		{
+			fprintf(stdout, "%s XSD validation caused an internal error\n",
+					ctx->current_file);
+		}
+	}
+	else if (ret == 0)
+	{
+		fprintf(stdout, "Successfully XSD validated %s\n", ctx->current_file);
+	}
+
+	/* cleanup */
+	xmlSchemaFreeValidCtxt(xsd_valid_ctx);
+	xmlFreeParserInputBuffer(input);
+	xsd_valid_ctx = NULL;
+	input = NULL;
+
+done:
+	return rv;
+}
+
 /* TODO implement both DTD and XSD validation */
 static int xvalid_validate_xml_file(xvalid_ctx_ptr ctx, const char *filename)
 {
+	int rv = 0;
+	xmlSchemaParserCtxtPtr xsd_ctx = NULL;
+
 	assert(ctx != NULL);
 	assert(filename != NULL);
 
-	xmlSAXUserParseFile(handlers, NULL, filename);
+	ctx->current_file = filename;
 
-	say(ctx, "INFO", "Validated");
+	/* validate with given XSD schema file if given */
+	if (ctx->schema_file != NULL)
+	{
+		/* compile and memoize XSD schema if not already present */
+		if (ctx->schema == NULL)
+		{
+			xsd_ctx = xmlSchemaNewParserCtxt(ctx->schema_file);
+			if (xsd_ctx == NULL)
+			{
+				fprintf(stderr, "[ERROR] unable to create an XSD parse context");
+				rv = 1;
+				goto done;
+			}
+			ctx->schema = xmlSchemaParse(xsd_ctx);
+			if (ctx->schema == NULL)
+			{
+				fprintf(stderr, "[ERROR] unable to compile XSD %s\n", ctx->schema_file);
+				rv = 1;
+				goto done;
+			}
+			xmlSchemaFreeParserCtxt(xsd_ctx);
+			xsd_ctx = NULL;
+		}
+		/* TODO check return value */
+		xvalid__xsd_validate(ctx);
+	}
+	/* validate with DTD file if given */
+	else if (ctx->dtd_file != NULL)
+	{
+		/* TODO check return value */
+		xvalid__dtd_validate(ctx);
+	}
+	/* parse and potentially validate with embedded DTD/XSD info
+	 * TODO any parser configuration settings needed?
+	 */
+	else
+	{
+		/* TODO check return value */
+		xmlSAXUserParseFile(ctx->handlers, NULL, filename);
+	}
 
-	return 0;
+done:
+	return rv;
 }
 
 static int xvalid_init(xvalid_ctx_ptr ctx)
 {
 	assert(ctx != NULL);
 
-	ctx->dtd = NULL;
-	ctx->schema = NULL;
+	ctx->dtd_file = NULL;
+	ctx->schema_file = NULL;
+	ctx->handlers = &sax_handlers;
 	ctx->handler_plugin = NULL;
-	ctx->current_filename = NULL;
+	ctx->current_file = NULL;
+	ctx->schema = NULL;
+	ctx->L = NULL;
 	ctx->parser_options = 0;
 	ctx->errors = 0;
 
 	return 0;
 }
 
-static int xvalid_parse_options(xvalid_ctx_ptr ctx, int argc, char **argv)
+static int xvalid__parse_options(xvalid_ctx_ptr ctx, int argc, char **argv)
 {
 	int i;
 
@@ -82,19 +188,19 @@ static int xvalid_parse_options(xvalid_ctx_ptr ctx, int argc, char **argv)
 		if ((!strcmp(argv[i], "-dtd")) || (!strcmp(argv[i], "--dtd")))
 		{
 			i++;
-			ctx->dtd = argv[i];
+			ctx->dtd_file = argv[i];
 			ctx->parser_options |= XML_PARSE_DTDLOAD;
 #ifdef XVALID_DEBUG_BUILD
-			printf("Using external DTD file %s\n", ctx->dtd);
+			printf("Using external DTD file %s\n", ctx->dtd_file);
 #endif
 			continue;
 		}
 		else if ((!strcmp(argv[i], "-xsd")) || (!strcmp(argv[i], "--xsd")))
 		{
 			i++;
-			ctx->schema = argv[i];
+			ctx->schema_file = argv[i];
 #ifdef XVALID_DEBUG_BUILD
-			printf("Using external XSD file %s\n", ctx->schema);
+			printf("Using external XSD file %s\n", ctx->schema_file);
 #endif
 			continue;
 		}
@@ -117,11 +223,11 @@ static int xvalid_parse_options(xvalid_ctx_ptr ctx, int argc, char **argv)
 	return i;
 }
 
-static int xvalid_check_config(xvalid_ctx_ptr ctx)
+static int xvalid__check_config(xvalid_ctx_ptr ctx)
 {
 	assert(ctx != NULL);
 
-	if ((ctx->dtd != NULL) && (ctx->schema != NULL))
+	if ((ctx->dtd_file != NULL) && (ctx->schema_file != NULL))
 	{
 		fprintf(stderr, "[ERROR] choose one of --dtd or --xsd, not both\n");
 		return 1;
@@ -134,6 +240,7 @@ int main(int argc, char **argv)
 {
 	int i;
 	int rv = 0;
+	int res = 0;
 	int files_start;
 	xvalid_context context;
 	xvalid_ctx_ptr ctx = &context;
@@ -152,9 +259,9 @@ int main(int argc, char **argv)
 		goto done;
 	}
 
-	files_start = xvalid_parse_options(ctx, argc, argv);
+	files_start = xvalid__parse_options(ctx, argc, argv);
 
-	if (xvalid_check_config(ctx))
+	if (xvalid__check_config(ctx))
 	{
 		xvalid_usage();
 		rv = EXIT_FAILURE;
@@ -162,13 +269,14 @@ int main(int argc, char **argv)
 	}
 
 	/* embed Lua interpreter */
-	if (xvalid_embed_lua(ctx))
+	if (xvalid__embed_lua(ctx))
 	{
 		fprintf(stderr, "Cannot initialize Lua; exiting...\n");
 		rv = EXIT_FAILURE;
 		goto done;
 	}
 
+	/* validate files given on cmd line */
 	for (i = files_start; i < argc; i++)
 	{
 		if (stat(argv[i], &stat_info) < 0)
@@ -184,14 +292,18 @@ int main(int argc, char **argv)
 			continue;
 		}
 
-		/* TODO confirm whether cleanup needed between iterations */
-		xvalid_validate_xml_file(NULL, argv[i]);
+		if ((res = xvalid_validate_xml_file(ctx, argv[i])))
+		{
+			if (res == 1)
+			{
+				rv = EXIT_FAILURE;
+				break;
+			}
+		}
 	}
 
-	/* cleanup function for the XML library; boilerplate */
+	/* cleanup */
 	xmlCleanupParser();
-
-	/* cleanup Lua */
 	lua_close(ctx->L);
 
 done:

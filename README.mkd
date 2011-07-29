@@ -82,7 +82,6 @@ no arguments like the following.
 
 ## TODO
 
-* ensure all relevant state is kept in the xvalid_context struct
 * give `configure` more brains to figure out whether `libxml2` and `liblua` are available
 * add filename length and maximum files checks
 * add runtime/CLI selectable support for `.so`, `.dll`, `.lua` error handlers

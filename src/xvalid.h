@@ -20,6 +20,7 @@
 #include <lualib.h>
 
 #include <libxml/parser.h>
+#include <libxml/xmlschemas.h>
 
 #define MAX_FILE_COUNT    200
 #define MAX_FILENAME_SIZE 100
@@ -41,13 +42,15 @@ extern void say(void *ctx, const char *tag, const char *msg);
  * Context for maintaining XValid's state during processing
  */
 typedef struct _xvalid_context {
-	char      *dtd;
-	char      *schema;
-	char      *handler_plugin;
-	char      *current_filename;
-	lua_State *L;
-	int        parser_options;
-	int        errors;
+	char				*dtd_file;
+	char				*schema_file;
+	xmlSAXHandlerPtr	handlers;
+	char				*handler_plugin;
+	const char			*current_file;
+	xmlSchemaPtr		schema;
+	lua_State			*L;
+	int					parser_options;
+	int					errors;
 } xvalid_context;
 typedef xvalid_context *xvalid_ctx_ptr;
 
@@ -92,6 +95,5 @@ static xmlSAXHandler sax_handlers = {
     NULL, /* endElementNs */
     NULL  /* xmlStructuredErrorFunc */
 };
-static xmlSAXHandlerPtr handlers = &sax_handlers;
 
 #endif /* XVALID_H */
