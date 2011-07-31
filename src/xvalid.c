@@ -65,18 +65,18 @@ static int xvalid__xsd_validate(xvalid_ctx_ptr ctx)
 	xsd_valid_ctx = xmlSchemaNewValidCtxt(ctx->schema);
 	if (xsd_valid_ctx == NULL)
 	{
-		fprintf(stderr, "[ERROR] unable to create an XSD validation context");
+		fprintf(stderr, "[ERROR] unable to create an XSD validation context\n");
 		rv = 1;
 		goto done;
 	}
-
 	if ((ret = xmlSchemaValidateStream(
 					xsd_valid_ctx,
 					input,
-					0,
+					XML_CHAR_ENCODING_NONE,
 					ctx->handlers,
 					NULL)))
 	{
+
 		if (ret > 0)
 		{
 			fprintf(stderr, "%s fails XSD validation\n", ctx->current_file);
