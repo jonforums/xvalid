@@ -104,8 +104,9 @@ static int xvalid__xsd_validate(xvalid_ctx_ptr ctx)
 
 	/* cleanup */
 	xmlSchemaFreeValidCtxt(xsd_valid_ctx);
-	xmlFreeParserInputBuffer(input);
 	xsd_valid_ctx = NULL;
+	/* TODO why does this SEGV? */
+	xmlFreeParserInputBuffer(input);
 	input = NULL;
 
 done:
