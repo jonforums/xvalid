@@ -67,7 +67,7 @@ EOT
 
 general options:
 EOT
-      opt :debug_build, 'build app with debugging messages', :short => :none
+      opt :chatty_build, 'build app with verbose messages', :short => :none
     end
 
   end
@@ -87,7 +87,7 @@ EOT
   def process_args
     @cc = @opts[:cc] if @opts[:cc_given]
 
-    @defines << 'NDEBUG' unless @opts[:debug_build_given]
+    @defines << 'NDEBUG' unless @opts[:chatty_build_given]
     @defines.concat @opts[:defines] if @opts[:defines_given]
 
     { :with_xml2_include => :with_xml2_include_given,
@@ -137,7 +137,7 @@ EOT
 #define XVALID_VERSION_STRING  "#{BUILD_CONFIG[:VERSION]}"
 EOT
 
-      f.puts '#define XVALID_DEBUG_BUILD     1' if @opts[:debug_build]
+      f.puts '#define XVALID_CHATTY_BUILD    1' if @opts[:chatty_build]
     end
   end
 

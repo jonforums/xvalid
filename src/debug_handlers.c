@@ -1,6 +1,6 @@
 #include "debug_handlers.h"
 
-#ifdef XVALID_DEBUG_BUILD
+#ifdef XVALID_CHATTY_BUILD
 void start_document(void *ctx)
 {
     fprintf(stdout, "  SAX.start_document()\n");
@@ -20,4 +20,4 @@ void end_element(void *ctx, const xmlChar *name)
 {
 	fprintf(stdout, "  SAX.end_element() for %s\n", (char *) name);
 }
-#endif /* XVALID_DEBUG_BUILD */
+#endif /* XVALID_CHATTY_BUILD */

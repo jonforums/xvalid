@@ -53,7 +53,7 @@ The XValid project consists of the following pieces:
         --debugflags, -g <s+>:   debug settings
     
     general options:
-                --debug-build:   build app with debugging messages
+               --chatty-build:   build app with verbose messages
                    --help, -h:   Show this message
 
 ## Usage Overview - xval executable

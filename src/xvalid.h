@@ -25,12 +25,12 @@
 #define MAX_FILE_COUNT    200
 #define MAX_FILENAME_SIZE 100
 
-#ifdef XVALID_DEBUG_BUILD
+#ifdef XVALID_CHATTY_BUILD
 extern void start_document(void *ctx);
 extern void end_document(void *ctx);
 extern void start_element(void *ctx, const xmlChar *name, const xmlChar **atts);
 extern void end_element(void *ctx, const xmlChar *name);
-#endif /* XVALID_DEBUG_BUILD */
+#endif /* XVALID_CHATTY_BUILD */
 
 /* TODO extract to handlers.h and include? */
 extern void warning(void *ctx, const char *msg, ...);
@@ -67,7 +67,7 @@ static xmlSAXHandler sax_handlers = {
     NULL, /* elementDecl */
     NULL, /* unparsedEntityDecl */
     NULL, /* setDocumentLocator */
-#ifdef XVALID_DEBUG_BUILD
+#ifdef XVALID_CHATTY_BUILD
     start_document,
     end_document,
     start_element,
@@ -77,7 +77,7 @@ static xmlSAXHandler sax_handlers = {
     NULL, /* endDocument */
     NULL, /* startElement */
     NULL, /* endElement */
-#endif /* XVALID_DEBUG_BUILD */
+#endif /* XVALID_CHATTY_BUILD */
     NULL, /* reference */
     NULL, /* characters */
     NULL, /* ignorableWhitespace */

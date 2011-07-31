@@ -200,7 +200,7 @@ static int xvalid__parse_options(xvalid_ctx_ptr ctx, int argc, char **argv)
 			i++;
 			ctx->dtd_file = argv[i];
 			ctx->parser_options |= XML_PARSE_DTDLOAD;
-#ifdef XVALID_DEBUG_BUILD
+#ifdef XVALID_CHATTY_BUILD
 			printf("Using external DTD file %s\n", ctx->dtd_file);
 #endif
 			continue;
@@ -209,7 +209,7 @@ static int xvalid__parse_options(xvalid_ctx_ptr ctx, int argc, char **argv)
 		{
 			i++;
 			ctx->schema_file = argv[i];
-#ifdef XVALID_DEBUG_BUILD
+#ifdef XVALID_CHATTY_BUILD
 			printf("Using external XSD file %s\n", ctx->schema_file);
 #endif
 			continue;
@@ -218,7 +218,7 @@ static int xvalid__parse_options(xvalid_ctx_ptr ctx, int argc, char **argv)
 		{
 			i++;
 			ctx->handler_plugin = argv[i];
-#ifdef XVALID_DEBUG_BUILD
+#ifdef XVALID_CHATTY_BUILD
 			printf("Using external handler plugin %s\n", ctx->handler_plugin);
 #endif
 			continue;
@@ -226,7 +226,7 @@ static int xvalid__parse_options(xvalid_ctx_ptr ctx, int argc, char **argv)
 		else break;
 	}
 
-#ifdef XVALID_DEBUG_BUILD
+#ifdef XVALID_CHATTY_BUILD
 	printf("File start at argv[%d]\n", i);
 #endif
 
