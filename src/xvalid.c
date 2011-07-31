@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2011 Jon Maken, All Rights Reserved
  * License: 3-Clause BSD
- * Revision: 07/29/2011 10:53:10 AM
+ * Revision: 07/31/2011 11:12:43 AM
  */
 
 #include "xvalid.h"
@@ -25,6 +25,7 @@ static void xvalid_usage(void)
 static int xvalid__embed_lua(xvalid_ctx_ptr ctx)
 {
 	assert(ctx != NULL);
+	assert(ctx->L == NULL);
 
 	ctx->L = luaL_newstate();
 	if (ctx->L == NULL) return 1;
@@ -46,7 +47,10 @@ static int xvalid__embed_lua(xvalid_ctx_ptr ctx)
 static int xvalid__dtd_validate(xvalid_ctx_ptr ctx)
 {
 	int rv = 0;
+
 	assert(ctx != NULL);
+	assert(ctx->dtd_file != NULL);
+	assert(ctx->current_file != NULL);
 
 	return 0;
 }
@@ -62,7 +66,8 @@ static int xvalid__xsd_validate(xvalid_ctx_ptr ctx)
 	assert(ctx->schema != NULL);
 	assert(ctx->current_file != NULL);
 
-	input = xmlParserInputBufferCreateFilename(ctx->current_file, XML_CHAR_ENCODING_NONE);
+	input = xmlParserInputBufferCreateFilename(ctx->current_file,
+				XML_CHAR_ENCODING_NONE);
 	if (input == NULL)
 	{
 		fprintf(stderr, "[ERROR] unable to open %s for XSD validation\n",
@@ -113,7 +118,7 @@ done:
 	return rv;
 }
 
-/* TODO implement both DTD and XSD validation */
+/* TODO implement both DTD validation */
 static int xvalid_validate_xml_file(xvalid_ctx_ptr ctx, const char *filename)
 {
 	int rv = 0;

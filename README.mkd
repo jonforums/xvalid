@@ -85,8 +85,7 @@ no arguments like the following.
 * give `configure` more brains to figure out whether `libxml2` and `liblua` are available
 * add filename length and maximum files checks
 * add runtime/CLI selectable support for `.so`, `.dll`, `.lua` error handlers
-* add Lua development dependencies download for Windows users
-* add support for building `libxml2` and `liblua` from source (leverage MiniPortile?)
+* add support for building `libxml2` and `liblua` from source, or binary download (leverage MiniPortile?)
 * add `upx` executable compression support to the build recipe
 
 ## License
