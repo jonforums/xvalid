@@ -60,6 +60,16 @@ static int xvalid__xsd_validate(xvalid_ctx_ptr ctx)
 
 	assert(ctx != NULL);
 	assert(ctx->schema != NULL);
+	assert(ctx->current_file != NULL);
+
+	input = xmlParserInputBufferCreateFilename(ctx->current_file, XML_CHAR_ENCODING_NONE);
+	if (input == NULL)
+	{
+		fprintf(stderr, "[ERROR] unable to open %s for XSD validation\n",
+				ctx->current_file);
+		rv = 1;
+		goto done;
+	}
 
 	/* TODO memoize XSD validation context */
 	xsd_valid_ctx = xmlSchemaNewValidCtxt(ctx->schema);
