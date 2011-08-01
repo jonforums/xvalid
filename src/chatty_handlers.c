@@ -1,4 +1,4 @@
-#include "debug_handlers.h"
+#include "chatty_handlers.h"
 
 #ifdef XVALID_CHATTY_BUILD
 void start_document(void *ctx)
