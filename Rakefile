@@ -3,6 +3,7 @@ unless File.exists?('config.yaml') && File.exists?('config.h')
   abort
 end
 
+require 'rbconfig'
 require 'rake/clean'
 
 root = File.expand_path File.dirname(__FILE__)
@@ -24,6 +25,14 @@ end
 Dir.glob("#{root}/rakelib/**/*.rake").sort.each do |lib|
   puts "Loading #{File.basename(lib)}" if Rake.application.options.trace
   load lib
+end
+
+def windows?
+  $windows ||= RbConfig::CONFIG['host_os'] =~ /(mingw|mswin)/
+end
+
+def dev_null
+  windows? ? 'NUL' : '/dev/null'
 end
 
 def ext(fn, newext)
@@ -68,6 +77,12 @@ file config[:APPNAME] => OBJFILES do |t|
 end
 
 desc "Build #{config[:APPNAME]} v#{config[:VERSION]}"
-task :build => [:settings, config[:APPNAME]]
+task :build => [:settings, config[:APPNAME]] do |t|
+  unless ENV['NOUPX']
+    if system("upx -h > #{dev_null} 2>&1")
+      system("upx -9 #{config[:APPNAME]}")
+    end
+  end
+end
 
 task :default => [:build]

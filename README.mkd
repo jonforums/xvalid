@@ -86,7 +86,6 @@ no arguments like the following.
 * add filename length and maximum files checks
 * add runtime/CLI selectable support for `.so`, `.dll`, `.lua` error handlers
 * add support for building `libxml2` and `liblua` from source, or binary download (leverage MiniPortile?)
-* add `upx` executable compression support to the build recipe
 
 ## License
 
