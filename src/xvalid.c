@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2011 Jon Maken, All Rights Reserved
  * License: 3-Clause BSD
- * Revision: 07/31/2011 11:12:43 AM
+ * Revision: 08/13/2011 10:17:42 PM
  */
 
 #include "xvalid.h"
@@ -110,9 +110,6 @@ static int xvalid__xsd_validate(xvalid_ctx_ptr ctx)
 	/* cleanup */
 	xmlSchemaFreeValidCtxt(xsd_valid_ctx);
 	xsd_valid_ctx = NULL;
-	/* TODO why does this SEGV? */
-	xmlFreeParserInputBuffer(input);
-	input = NULL;
 
 done:
 	return rv;
