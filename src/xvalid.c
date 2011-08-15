@@ -246,6 +246,31 @@ static int xvalid__check_config(xvalid_ctx_ptr ctx)
 		return 1;
 	}
 
+	if (ctx->dtd_file != NULL)
+	{
+		if (stat(ctx->dtd_file, &stat_info) < 0)
+		{
+			switch (errno)
+			{
+				case ENOENT:
+					fprintf(stderr, "[ERROR] DTD file '%s' not found\n", ctx->dtd_file);
+					return 1;
+			}
+		}
+	}
+	else if (ctx->schema_file != NULL)
+	{
+		if (stat(ctx->schema_file, &stat_info) < 0)
+		{
+			switch (errno)
+			{
+				case ENOENT:
+					fprintf(stderr, "[ERROR] XSD file '%s' not found\n", ctx->schema_file);
+					return 1;
+			}
+		}
+	}
+
 	return 0;
 }
 
