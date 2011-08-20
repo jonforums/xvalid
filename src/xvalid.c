@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2011 Jon Maken, All Rights Reserved
  * License: 3-Clause BSD
- * Revision: 08/13/2011 10:17:42 PM
+ * Revision: 08/20/2011 10:45:33 AM
  */
 
 #include "xvalid.h"
@@ -19,7 +19,7 @@ static void xvalid_usage(void)
 	printf("  --xsd FILE       validate with external XSD schema file\n");
 	printf("\n");
 	printf("where general options are:\n");
-	printf("  --handler FILE  use external error handler (.so|.dll|.lua)\n");
+	printf("  --handler FILE   use external error handler (.so|.dll|.lua)\n");
 }
 
 static int xvalid__embed_lua(xvalid_ctx_ptr ctx)
@@ -70,7 +70,7 @@ static int xvalid__xsd_validate(xvalid_ctx_ptr ctx)
 				XML_CHAR_ENCODING_NONE);
 	if (input == NULL)
 	{
-		fprintf(stderr, "[ERROR] unable to open %s for XSD validation\n",
+		fprintf(stderr, "[ERROR] unable to open %s for XSD validation\n\n",
 				ctx->current_file);
 		rv = 1;
 		goto done;
@@ -80,7 +80,7 @@ static int xvalid__xsd_validate(xvalid_ctx_ptr ctx)
 	xsd_valid_ctx = xmlSchemaNewValidCtxt(ctx->schema);
 	if (xsd_valid_ctx == NULL)
 	{
-		fprintf(stderr, "[ERROR] unable to create an XSD validation context\n");
+		fprintf(stderr, "[ERROR] unable to create an XSD validation context\n\n");
 		rv = 1;
 		goto done;
 	}
@@ -115,7 +115,6 @@ done:
 	return rv;
 }
 
-/* TODO implement DTD validation */
 static int xvalid_validate_xml_file(xvalid_ctx_ptr ctx, const char *filename)
 {
 	int rv = 0;
@@ -135,14 +134,14 @@ static int xvalid_validate_xml_file(xvalid_ctx_ptr ctx, const char *filename)
 			xsd_ctx = xmlSchemaNewParserCtxt(ctx->schema_file);
 			if (xsd_ctx == NULL)
 			{
-				fprintf(stderr, "[ERROR] unable to create an XSD parse context");
+				fprintf(stderr, "[ERROR] unable to create an XSD parse context\n\n");
 				rv = 1;
 				goto done;
 			}
 			ctx->schema = xmlSchemaParse(xsd_ctx);
 			if (ctx->schema == NULL)
 			{
-				fprintf(stderr, "[ERROR] unable to compile XSD %s\n", ctx->schema_file);
+				fprintf(stderr, "[ERROR] unable to compile XSD %s\n\n", ctx->schema_file);
 				rv = 1;
 				goto done;
 			}
@@ -247,7 +246,7 @@ static int xvalid__check_config(xvalid_ctx_ptr ctx)
 
 	if ((ctx->dtd_file != NULL) && (ctx->schema_file != NULL))
 	{
-		fprintf(stderr, "[ERROR] choose one of --dtd or --xsd, not both\n");
+		fprintf(stderr, "[ERROR] choose one of --dtd or --xsd, not both\n\n");
 		return 1;
 	}
 
@@ -264,7 +263,7 @@ static int xvalid__check_config(xvalid_ctx_ptr ctx)
 			switch (errno)
 			{
 				case ENOENT:
-					fprintf(stderr, "[ERROR] DTD file '%s' not found\n", ctx->dtd_file);
+					fprintf(stderr, "[ERROR] DTD file '%s' not found\n\n", ctx->dtd_file);
 					return 1;
 			}
 		}
@@ -276,7 +275,7 @@ static int xvalid__check_config(xvalid_ctx_ptr ctx)
 			switch (errno)
 			{
 				case ENOENT:
-					fprintf(stderr, "[ERROR] XSD file '%s' not found\n", ctx->schema_file);
+					fprintf(stderr, "[ERROR] XSD file '%s' not found\n\n", ctx->schema_file);
 					return 1;
 			}
 		}
