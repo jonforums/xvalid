@@ -68,12 +68,12 @@ no arguments like the following.
     XValid vX.Y.Z - validate XML documents
     Usage: xval [options] XML_FILE ...
     
-    where validation are:
-      --dtd FILE      validate against external DTD file
-      --xsd FILE      validate against external XSD schema file
-    
+    where validation options are:
+      --dtd ROOT FILE  validate ROOT element with external DTD file
+      --xsd FILE       validate with external XSD schema file
+
     where general options are:
-      --handler FILE  use external error handler (.so|.dll|.lua)
+      --handler FILE   use external error handler (.so|.dll|.lua)
 
 ## Considerations
 

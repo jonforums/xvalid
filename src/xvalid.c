@@ -14,9 +14,9 @@ static void xvalid_usage(void)
 	printf("XValid v%s - validate XML documents\n", XVALID_VERSION_STRING);
 	printf("Usage: xval [options] XML_FILE ...\n");
 	printf("\n");
-	printf("where validation are:\n");
-	printf("  --dtd FILE      validate against external DTD file\n");
-	printf("  --xsd FILE      validate against external XSD schema file\n");
+	printf("where validation options are:\n");
+	printf("  --dtd ROOT FILE  validate ROOT element with external DTD file\n");
+	printf("  --xsd FILE       validate with external XSD schema file\n");
 	printf("\n");
 	printf("where general options are:\n");
 	printf("  --handler FILE  use external error handler (.so|.dll|.lua)\n");
@@ -176,6 +176,7 @@ static int xvalid_init(xvalid_ctx_ptr ctx)
 	assert(ctx != NULL);
 
 	ctx->dtd_file = NULL;
+	ctx->root = NULL;
 	ctx->schema_file = NULL;
 	ctx->handlers = &sax_handlers;
 	ctx->handler_plugin = NULL;
@@ -201,10 +202,14 @@ static int xvalid__parse_options(xvalid_ctx_ptr ctx, int argc, char **argv)
 		if ((!strcmp(argv[i], "-dtd")) || (!strcmp(argv[i], "--dtd")))
 		{
 			i++;
+			ctx->root = argv[i];
+			i++;
 			ctx->dtd_file = argv[i];
 			ctx->parser_options |= XML_PARSE_DTDLOAD;
 #ifdef XVALID_CHATTY_BUILD
-			printf("Using external DTD file %s\n", ctx->dtd_file);
+			printf("Using external DTD file %s to parse %s root element\n",
+					ctx->dtd_file,
+					ctx->root);
 #endif
 			continue;
 		}
@@ -248,6 +253,12 @@ static int xvalid__check_config(xvalid_ctx_ptr ctx)
 
 	if (ctx->dtd_file != NULL)
 	{
+		if ((ctx->root == NULL) || (stat(ctx->root, &stat_info) == 0))
+		{
+			fprintf(stderr, "[ERROR] must give root XML element for DTD validation\n\n");
+			return 1;
+		}
+
 		if (stat(ctx->dtd_file, &stat_info) < 0)
 		{
 			switch (errno)

@@ -43,6 +43,7 @@ extern void say(void *ctx, const char *tag, const char *msg);
  */
 typedef struct _xvalid_context {
 	char				*dtd_file;
+	char				*root;
 	char				*schema_file;
 	xmlSAXHandlerPtr	handlers;
 	char				*handler_plugin;
