@@ -115,7 +115,7 @@ done:
 	return rv;
 }
 
-/* TODO implement both DTD validation */
+/* TODO implement DTD validation */
 static int xvalid_validate_xml_file(xvalid_ctx_ptr ctx, const char *filename)
 {
 	int rv = 0;
